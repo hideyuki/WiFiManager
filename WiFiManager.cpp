@@ -3874,8 +3874,19 @@ void WiFiManager::handleUpdating(){
     // Update.onProgress([](unsigned int progress, unsigned int total) {
     //       Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
     // });
-
-  	if (!Update.begin(maxSketchSpace)) { // start with max available size
+    int command=0;
+    if(strcmp(upload.filename.c_str(),"firmware.bin")==0)
+    {
+      command = U_FLASH;
+      Serial.println("Firmware file selected");
+    }
+    else if(strcmp(upload.filename.c_str(),"spiffs.bin")==0)
+    {
+      command = U_SPIFFS;
+      Serial.println("SPIFFS file selected");
+    }
+    
+  	if (!Update.begin(maxSketchSpace, command)) { // start with max available size
         #ifdef WM_DEBUG_LEVEL
         DEBUG_WM(DEBUG_ERROR,F("[ERROR] OTA Update ERROR"), Update.getError());
         #endif
